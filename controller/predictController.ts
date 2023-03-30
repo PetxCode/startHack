@@ -132,15 +132,7 @@ export const predictionTableForAdmin = async (req: Request, res: Response) => {
       return match.some((props) => el.scoreEntry === props.scoreEntry);
     });
 
-    let count = 0;
-
-    table.map(async (el) => {
-      count++;
-
-      user?.show.filter((props) => {
-        user?.show.push(el.id !== props.id);
-      });
-    });
+    user!.show.push(table!);
     user!.save();
     // const showTable = await leaderModel.find();
 
@@ -223,7 +215,7 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
           .catch((error) => console.log(error));
 
         setTimeout(async () => {
-          await leaderModel.deleteMany();
+          user.show.push(null);
         }, 30000);
       });
 
