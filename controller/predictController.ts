@@ -204,7 +204,7 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
         return match.some((props) => el.scoreEntry === props.scoreEntry);
       });
 
-      table.map((el) => {
+      user.show.map((el) => {
         let email = el?.email;
         let prize = el?.prize;
 
@@ -215,14 +215,18 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
           .catch((error) => console.log(error));
 
         setTimeout(async () => {
-            user.show.push("");
+            user.show.push();
             user.save()
         }, 5000);
       });
+        console.log(user)
+
+        user.show.push();
+        user.save();
 
       return res.status(200).json({
         message: "Match is still on going...!",
-        data: table,
+        data: user.show,
       });
     } else {
       return res.status(404).json({
