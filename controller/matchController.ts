@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import matchModel from "../model/matchModel";
 import userModel from "../model/userModel";
 import predictModel from "../model/predictModel";
+import { congratulation } from "../utils/email";
 
 export const createMatch = async (req: Request, res: Response) => {
   try {
@@ -19,7 +20,7 @@ export const createMatch = async (req: Request, res: Response) => {
         Odds,
         stopPlay: false,
         startPlay: false,
-        scoreEntry: `${teamAScore} v ${teamBScore}`,
+        scoreEntry: `${0} v ${0}`,
         dateTime,
       });
 
@@ -42,10 +43,9 @@ export const viewAllMatch = async (req: Request, res: Response) => {
     const match = await matchModel.find();
     const predict = await predictModel.find();
 
-    
     return res.status(200).json({
       message: "found",
-        data: match,
+      data: match,
     });
   } catch (error) {
     console.log(error);
@@ -120,7 +120,25 @@ export const updateStartMatch = async (req: Request, res: Response) => {
           },
           { new: true },
         );
-      }, 60000);
+
+        const predict = await predictModel.find();
+        const match = await matchModel.find();
+
+        const table = predict.filter((el) => {
+          return match.some((props) => el.scoreEntry === props.scoreEntry);
+        });
+
+        table.map((el) => {
+          let email = el?.email;
+          let prize = el?.prize;
+
+          congratulation(email, prize)
+            .then((result) => {
+              console.log("message been sent to you: ");
+            })
+            .catch((error) => console.log(error));
+        });
+      }, 10000);
 
       return res.status(200).json({
         message: "found",

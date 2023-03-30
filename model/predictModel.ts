@@ -1,13 +1,18 @@
 import mongoose from "mongoose";
 
 interface iUser {
+  startPlay: boolean;
+  stopPlay: boolean;
+  
   teamA: string;
   teamB: string;
 
   teamAScore: number;
   teamBScore: number;
 
+  matchID: string;
   dateTime: string;
+  email: string;
   amount: number;
   prize: number;
 
@@ -19,10 +24,22 @@ interface iUserData extends iUser, mongoose.Document {}
 
 const predictModel = new mongoose.Schema(
   {
+    startPlay: {
+      type: Boolean,
+    },
+    stopPlay: {
+      type: Boolean,
+    },
     teamA: {
       type: String,
     },
     teamB: {
+      type: String,
+    },
+    email: {
+      type: String,
+    },
+    matchID: {
       type: String,
     },
 
