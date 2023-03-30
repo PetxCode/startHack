@@ -2,8 +2,10 @@ import { Request, Response } from "express";
 import matchModel from "../model/matchModel";
 import userModel from "../model/userModel";
 import predictModel from "../model/predictModel";
+import leaderModel from "../model/leaderTable";
 import mongoose from "mongoose";
 import { congratulation } from "../utils/email";
+import leaderTable from "../model/leaderTable";
 
 export const createPrediction = async (req: Request, res: Response) => {
   try {
@@ -19,8 +21,8 @@ export const createPrediction = async (req: Request, res: Response) => {
         });
       } else {
         const newMatch = await predictModel.create({
-          startPlay: match?.startPlay,
-          stopPlay: match?.stopPlay,
+          //   startPlay: match?.startPlay,
+          //   stopPlay: match?.stopPlay,
           teamA: match?.teamA,
           teamB: match?.teamB,
           teamAScore,
@@ -101,9 +103,12 @@ export const predictionTable = async (req: Request, res: Response) => {
     const predict = await predictModel.find();
     const match = await matchModel.find();
 
-    const table = predict.filter((el) => {
+    const table = predict.filter(async (el) => {
       return match.some((props) => el.scoreEntry === props.scoreEntry);
     });
+    console.log(table);
+
+    // .updateMany(table);
 
     return res.status(200).json({
       message: " prediction table",
@@ -111,7 +116,58 @@ export const predictionTable = async (req: Request, res: Response) => {
     });
   } catch (error) {
     return res.status(404).json({
-      message: "Erro",
+      message: "Error",
+    });
+  }
+};
+
+export const predictionTableForAdmin = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const predict = await predictModel.find();
+    const match = await matchModel.find();
+    const user = await userModel.findById(id);
+
+    const table = predict.filter(async (el) => {
+      return match.some((props) => el.scoreEntry === props.scoreEntry);
+    });
+
+    let count = 0;
+
+    table.map(async (el) => {
+      count++;
+
+      user?.show.filter((props) => {
+        user?.show.push(el.id !== props.id);
+      });
+    });
+    user!.save();
+    // const showTable = await leaderModel.find();
+
+    return res.status(200).json({
+      message: "prediction leaderstable",
+      data: user?.show,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      message: "Error",
+      data: error.message,
+    });
+  }
+};
+
+export const predictionTableForShow = async (req: Request, res: Response) => {
+  try {
+    const showTable = await leaderModel.find();
+
+    return res.status(200).json({
+      message: "prediction leaderstable for show",
+      data: showTable,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      message: "Error",
+      data: error.message,
     });
   }
 };
@@ -147,33 +203,28 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
 
     const predict = await predictModel.find();
     const match = await matchModel.find();
+    const leader = await leaderModel.find();
 
     const user = await userModel.findById(id);
 
     if (user) {
-      const table = predict.filter((el) => {
+      const table = leader.filter((el) => {
         return match.some((props) => el.scoreEntry === props.scoreEntry);
       });
 
       table.map((el) => {
-        if (el.stopPlay) {
-          console.log(el.email);
-          console.log(el.stopPlay);
-          let email = el?.email;
-          let prize = el?.prize;
+        let email = el?.email;
+        let prize = el?.prize;
 
-          congratulation(email, prize)
-            .then((result) => {
-              console.log("message been sent to you: ");
-            })
-            .catch((error) => console.log(error));
-          }
-          
-          setTimeout(async() => {
-              await predictModel.deleteMany()
+        congratulation(email, prize)
+          .then((result) => {
+            console.log("message been sent to you: ");
+          })
+          .catch((error) => console.log(error));
 
-          }, 60000)
-
+        setTimeout(async () => {
+          await leaderModel.deleteMany();
+        }, 30000);
       });
 
       return res.status(200).json({

@@ -1,16 +1,16 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 interface iUser {
-    isAdmin: boolean,
-    email: string,
-    password: string,
-    userName: string,
+  isAdmin: boolean;
+  email: string;
+  password: string;
+  userName: string;
 
-    predict: any[]
+  predict: any[];
+  show: string[];
 }
 
-interface iUserData extends iUser, mongoose.Document { }
-
+interface iUserData extends iUser, mongoose.Document {}
 
 const userModel = new mongoose.Schema(
   {
@@ -35,8 +35,12 @@ const userModel = new mongoose.Schema(
         ref: "predicts",
       },
     ],
+
+    show: {
+      type: Array
+    },
   },
   { timestamps: true },
 );
 
-export default mongoose.model<iUserData>("users", userModel)
+export default mongoose.model<iUserData>("users", userModel);
