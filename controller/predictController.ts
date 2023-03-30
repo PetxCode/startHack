@@ -215,8 +215,9 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
           .catch((error) => console.log(error));
 
         setTimeout(async () => {
-          user.show.push(null);
-        }, 30000);
+            user.show.push("");
+            user.save()
+        }, 5000);
       });
 
       return res.status(200).json({

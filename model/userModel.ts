@@ -7,7 +7,7 @@ interface iUser {
   userName: string;
 
   predict: any[];
-  show: string[];
+  show: any[];
 }
 
 interface iUserData extends iUser, mongoose.Document {}
