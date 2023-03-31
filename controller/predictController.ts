@@ -215,14 +215,14 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
           .catch((error) => console.log(error));
 
         setTimeout(async () => {
-            user?.show = [];
-            user.save()
+          user?.show.flat() = [];
+          user.save();
         }, 5000);
       });
-        console.log(user)
+      console.log(user);
 
-        // user.show.push();
-        // user.save();
+      // user.show.push();
+      // user.save();
 
       return res.status(200).json({
         message: "Match is still on going...!",
