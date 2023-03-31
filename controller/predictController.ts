@@ -132,7 +132,7 @@ export const predictionTableForAdmin = async (req: Request, res: Response) => {
       return match.some((props) => el.scoreEntry === props.scoreEntry);
     });
 
-    user!.show.push(table!);
+    user!.show.push(table!).flat();
     user!.save();
     // const showTable = await leaderModel.find();
 
@@ -215,14 +215,15 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
           .catch((error) => console.log(error));
 
         setTimeout(async () => {
-          let a = user?.show.flat();
-          a = [];
+           user?.show = [];
           
         }, 5000);
       });
       console.log(user);
 
       // user.show.push();
+      let a = user?.show = [];
+     
       user.save();
 
       return res.status(200).json({
