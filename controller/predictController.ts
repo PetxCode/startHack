@@ -222,7 +222,7 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
       console.log(user);
 
       // user.show.push();
-      let a = user?.show = [];
+      user?.show = [];
      
       user.save();
 
