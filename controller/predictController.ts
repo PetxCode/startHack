@@ -2,10 +2,8 @@ import { Request, Response } from "express";
 import matchModel from "../model/matchModel";
 import userModel from "../model/userModel";
 import predictModel from "../model/predictModel";
-import leaderModel from "../model/leaderTable";
 import mongoose from "mongoose";
 import { congratulation } from "../utils/email";
-import leaderTable from "../model/leaderTable";
 
 export const createPrediction = async (req: Request, res: Response) => {
   try {
@@ -106,9 +104,6 @@ export const predictionTable = async (req: Request, res: Response) => {
     const table = predict.filter(async (el) => {
       return match.some((props) => el.scoreEntry === props.scoreEntry);
     });
-    console.log(table);
-
-    // .updateMany(table);
 
     return res.status(200).json({
       message: " prediction table",
@@ -151,21 +146,6 @@ export const predictionTableForAdmin = async (req: Request, res: Response) => {
   }
 };
 
-export const predictionTableForShow = async (req: Request, res: Response) => {
-  try {
-    const showTable = await leaderModel.find();
-
-    return res.status(200).json({
-      message: "prediction leaderstable for show",
-      data: showTable,
-    });
-  } catch (error) {
-    return res.status(404).json({
-      message: "Error",
-      data: error.message,
-    });
-  }
-};
 
 export const userPredictionTable = async (req: Request, res: Response) => {
   try {
@@ -191,7 +171,6 @@ export const userPredictionTable = async (req: Request, res: Response) => {
     });
   }
 };
-
 
 //This function triggers messages in the show[] to be sent
 export const triggerPredictionReward = async (req: Request, res: Response) => {
@@ -219,9 +198,9 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
           })
           .catch((error) => console.log(error));
       });
-        
-        //here dele all data inside the show for fresh entry
-        
+
+      //here dele all data inside the show for fresh entry
+
       setTimeout(async () => {
         console.log("well done...");
         while (user?.show.length > 0) {
@@ -235,7 +214,7 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
       console.log("passed: ", user.show);
 
       return res.status(200).json({
-        message: "Match is still on going...!",
+        message: "Message sent to Everyone taht wins...!",
         data: user.show,
       });
     } else {

@@ -111,7 +111,7 @@ export const updateStartMatch = async (req: Request, res: Response) => {
         },
         { new: true },
       );
-
+      // Stop match automatically when the it gets to the required minutes!
       setTimeout(async () => {
         await matchModel.findByIdAndUpdate(
           ID,
@@ -131,7 +131,7 @@ export const updateStartMatch = async (req: Request, res: Response) => {
         table.map((el) => {
           let email = el?.email;
           let prize = el?.prize;
-
+          // send message to winner once the match ends
           congratulation(email, prize)
             .then((result) => {
               console.log("message been sent to you: ");
