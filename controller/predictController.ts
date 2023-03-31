@@ -132,10 +132,13 @@ export const predictionTableForAdmin = async (req: Request, res: Response) => {
       return match.some((props) => el.scoreEntry === props.scoreEntry);
     });
 
-    user!.show.push(table!);
-    user!.save();
     // const showTable = await leaderModel.find();
 
+    table.map((el) => {
+      user!.show.push(el);
+    });
+
+    user!.save();
     return res.status(200).json({
       message: "prediction leaderstable",
       data: user?.show,
@@ -215,25 +218,19 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
           .catch((error) => console.log(error));
 
         setTimeout(async () => {
-          //   let a = user?.show.flat() ;
-          //   a = []
 
-          while (user?.show.flat().length > 0) {
-            user?.show.flat().pop();
+          while (user?.show.length > 0) {
+            user?.show.pop();
           }
         }, 5000);
       });
-      console.log(user);
-
-      // user.show.push();
-    //   let a = user?.show.flat();
-    //   a = [];
 
       user.save();
+      console.log("passed: ", user.show);
 
       return res.status(200).json({
         message: "Match is still on going...!",
-        data: user.show.flat(),
+        data: user.show,
       });
     } else {
       return res.status(404).json({
