@@ -216,16 +216,17 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
             console.log("message been sent to you: ");
           })
           .catch((error) => console.log(error));
-
-        setTimeout(async () => {
-
-          while (user?.show.length > 0) {
-            user?.show.pop();
-          }
-        }, 5000);
       });
+      setTimeout(async () => {
+        console.log("well done...");
+        while (user?.show.length > 0) {
+          console.log(user?.show.length);
+          user?.show.pop();
+        }
+        console.log("passed shown: ", user.show);
+        user.save();
+      }, 5000);
 
-      user.save();
       console.log("passed: ", user.show);
 
       return res.status(200).json({
