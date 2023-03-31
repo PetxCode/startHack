@@ -192,6 +192,8 @@ export const userPredictionTable = async (req: Request, res: Response) => {
   }
 };
 
+
+//This function triggers messages in the show[] to be sent
 export const triggerPredictionReward = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -207,7 +209,7 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
         return match.some((props) => el.scoreEntry === props.scoreEntry);
       });
 
-      user.show.flat().map((el) => {
+      user.show.map((el) => {
         let email = el?.email;
         let prize = el?.prize;
 
@@ -217,6 +219,9 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
           })
           .catch((error) => console.log(error));
       });
+        
+        //here dele all data inside the show for fresh entry
+        
       setTimeout(async () => {
         console.log("well done...");
         while (user?.show.length > 0) {
