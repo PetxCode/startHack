@@ -19,8 +19,6 @@ export const createPrediction = async (req: Request, res: Response) => {
         });
       } else {
         const newMatch = await predictModel.create({
-          //   startPlay: match?.startPlay,
-          //   stopPlay: match?.stopPlay,
           teamA: match?.teamA,
           teamB: match?.teamB,
           teamAScore,
@@ -179,15 +177,10 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
 
     const predict = await predictModel.find();
     const match = await matchModel.find();
-    const leader = await leaderModel.find();
 
     const user = await userModel.findById(id);
 
     if (user) {
-      const table = leader.filter((el) => {
-        return match.some((props) => el.scoreEntry === props.scoreEntry);
-      });
-
       user.show.map((el) => {
         let email = el?.email;
         let prize = el?.prize;
