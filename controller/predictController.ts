@@ -215,14 +215,15 @@ export const triggerPredictionReward = async (req: Request, res: Response) => {
           .catch((error) => console.log(error));
 
         setTimeout(async () => {
-           user?.show.flat() = [];
-          
+          let a = user?.show.flat() ;
+          a = []
         }, 5000);
       });
       console.log(user);
 
       // user.show.push();
-      user?.show.flat() = [];
+     let a = user?.show.flat() ;
+          a = []
      
       user.save();
 
